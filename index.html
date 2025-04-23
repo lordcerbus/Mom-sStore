@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mom's Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header e Navegação -->
+    <header>
+        <h1>MOM'S STORE</h1>
+        <nav>
+            <div id="user-section">
+                <button id="login-btn">Entrar</button>
+                <button id="register-btn">Registrar</button>
+                <span id="username-display" style="display:none"></span>
+                <button id="logout-btn" style="display:none">Sair</button>
+            </div>
+            <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
+        </nav>
+    </header>
+
+    <!-- Modal de Login/Registro -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="login-form">
+                <h2>Login</h2>
+                <input type="email" id="login-email" placeholder="E-mail">
+                <input type="password" id="login-password" placeholder="Senha">
+                <button onclick="login()">Entrar</button>
+                <p>Ainda não tem conta? <a href="#" id="show-register">Registre-se</a></p>
+            </div>
+            <div id="register-form" style="display:none">
+                <h2>Registro</h2>
+                <input type="text" id="register-name" placeholder="Nome Completo">
+                <input type="text" name="register-birth" id="register-birth" placeholder="Data de Nascimento">
+                <input type="email" id="register-email" placeholder="E-mail">
+                <input type="password" id="register-password" placeholder="Senha">
+                <textarea id="register-address" placeholder="Endereço"></textarea>
+                <input type="text" name="number-address" id="number-address" placeholder="Número">
+                <input type="text" id="register-complement" placeholder="Complemento (opcional)">
+                <input type="text" id="register-city" placeholder="Cidade">
+                <input type="text" id="register-state" placeholder="Estado (sigla)">
+                <input type="text" id="register-zip" placeholder="CEP (somente números)">
+                <input type="text" id="register-phone" placeholder="Telefone">
+                <input type="text" id="register-cpf" placeholder="CPF (somente números)">
+                <button onclick="register()">Registrar</button>
+                <p>Já tem conta? <a href="#" id="show-login">Faça login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Busca -->
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Buscar produtos..." onkeyup="if(event.key === 'Enter') buscarProdutos()">
+        <button onclick="buscarProdutos()">🔍</button>
+    </div>
+
+    <!-- Categorias -->
+    <div class="categories">
+        <button class="category-btn active" data-category="all">Todos</button>
+        <button class="category-btn" data-category="calcados">Calçados</button>
+        <button class="category-btn" data-category="eletronicos">Eletrônicos</button>
+        <button class="category-btn" data-category="vestuario">Vestuário</button>
+    </div>
+
+    <!-- Container de Produtos -->
+    <main id="products-container"></main>
+
+    <!-- Paginação -->
+    <div class="pagination">
+        <button id="prev-page">Anterior</button>
+        <div id="page-numbers"></div>
+        <button id="next-page">Próxima</button>
+    </div>
+
+    <!-- Carrinho de Compras -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Seu Carrinho</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total">Total: R$ 0.00</div>
+            <button id="checkout-btn" onclick="checkout()">Finalizar via WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- Modal de Avaliações -->
+    <div id="reviews-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="reviews-title">Avaliações</h2>
+            <div id="reviews-list"></div>
+            <div id="add-review">
+                <h3>Adicionar Avaliação</h3>
+                <select id="review-rating">
+                    <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+                    <option value="4">⭐️⭐️⭐️⭐️</option>
+                    <option value="3">⭐️⭐️⭐️</option>
+                    <option value="2">⭐️⭐️</option>
+                    <option value="1">⭐️</option>
+                </select>
+                <textarea id="review-comment" placeholder="Deixe seu comentário"></textarea>
+                <button onclick="enviarAvaliacao()">Enviar Avaliação</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
