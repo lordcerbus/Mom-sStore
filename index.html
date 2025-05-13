@@ -1,113 +1,178 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mom's Store</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Simone’s Semi Jóias</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header e Navegação -->
-    <header>
-        <h1>MOM'S STORE</h1>
-        <nav>
-            <div id="user-section">
-                <button id="login-btn">Entrar</button>
-                <button id="register-btn">Registrar</button>
-                <span id="username-display" style="display:none"></span>
-                <button id="logout-btn" style="display:none">Sair</button>
-            </div>
-            <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-        </nav>
-    </header>
+  <header>
+    <h1>Simone’s Semi Jóias</h1>
+    <p>Beleza que brilha com você ✨</p>
+    <div class="user-actions">
+      <button id="login-btn"><i class="fas fa-user"></i> Entrar</button>
+      <button id="cart-btn"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></button>
+      <button id="favorites-btn" style="display: none;"><i class="fas fa-heart"></i> Favoritos</button>
+    </div>
+  </header>
 
-    <!-- Modal de Login/Registro -->
-    <div id="auth-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="login-form">
-                <h2>Login</h2>
-                <input type="email" id="login-email" placeholder="E-mail">
-                <input type="password" id="login-password" placeholder="Senha">
-                <button onclick="login()">Entrar</button>
-                <p>Ainda não tem conta? <a href="#" id="show-register">Registre-se</a></p>
-            </div>
-            <div id="register-form" style="display:none">
-                <h2>Registro</h2>
-                <input type="text" id="register-name" placeholder="Nome Completo">
-                <input type="text" name="register-birth" id="register-birth" placeholder="Data de Nascimento">
-                <input type="email" id="register-email" placeholder="E-mail">
-                <input type="password" id="register-password" placeholder="Senha">
-                <textarea id="register-address" placeholder="Endereço"></textarea>
-                <input type="text" name="number-address" id="number-address" placeholder="Número">
-                <input type="text" id="register-complement" placeholder="Complemento (opcional)">
-                <input type="text" id="register-city" placeholder="Cidade">
-                <input type="text" id="register-state" placeholder="Estado (sigla)">
-                <input type="text" id="register-zip" placeholder="CEP (somente números)">
-                <input type="text" id="register-phone" placeholder="Telefone">
-                <input type="text" id="register-cpf" placeholder="CPF (somente números)">
-                <button onclick="register()">Registrar</button>
-                <p>Já tem conta? <a href="#" id="show-login">Faça login</a></p>
-            </div>
+  <div id="filtros">
+    <input type="text" id="busca" placeholder="Buscar produto...">
+    <select id="categoria">
+      <option value="">Todas as categorias</option>
+      <option value="Colares">Colares</option>
+      <option value="Anéis">Anéis</option>
+      <option value="Brincos">Brincos</option>
+      <option value="Pulseiras">Pulseiras</option>
+      <option value="Tornozeleiras">Tornozeleiras</option>
+    </select>
+    <select id="preco">
+      <option value="">Filtrar por preço</option>
+      <option value="50">Até R$50</option>
+      <option value="100">Até R$100</option>
+      <option value="200">Até R$200</option>
+      <option value="200">Até R$500</option>
+      <option value="200">Até R$1000</option>
+    </select>
+  </div>
+
+  <main id="catalogo"></main>
+
+  <aside id="carrinho">
+    <h2>🛒 Carrinho <button id="close-cart"><i class="fas fa-times"></i></button></h2>
+    <ul id="lista-carrinho"></ul>
+    <p><strong>Total:</strong> R$ <span id="total">0.00</span></p>
+    <button id="checkout-btn">Finalizar Pedido</button>
+  </aside>
+
+  <!-- Modal de Login -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="login-modal-title">Entrar</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div id="login-form">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="seu@email.com">
         </div>
-    </div>
-
-    <!-- Barra de Busca -->
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Buscar produtos..." onkeyup="if(event.key === 'Enter') buscarProdutos()">
-        <button onclick="buscarProdutos()">🔍</button>
-    </div>
-
-    <!-- Categorias -->
-    <div class="categories">
-        <button class="category-btn active" data-category="all">Todos</button>
-        <button class="category-btn" data-category="calcados">Calçados</button>
-        <button class="category-btn" data-category="eletronicos">Eletrônicos</button>
-        <button class="category-btn" data-category="vestuario">Vestuário</button>
-    </div>
-
-    <!-- Container de Produtos -->
-    <main id="products-container"></main>
-
-    <!-- Paginação -->
-    <div class="pagination">
-        <button id="prev-page">Anterior</button>
-        <div id="page-numbers"></div>
-        <button id="next-page">Próxima</button>
-    </div>
-
-    <!-- Carrinho de Compras -->
-    <div id="cart-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Seu Carrinho</h2>
-            <div id="cart-items"></div>
-            <div id="cart-total">Total: R$ 0.00</div>
-            <button id="checkout-btn" onclick="checkout()">Finalizar via WhatsApp</button>
+        <div class="form-group">
+          <label for="login-password">Senha</label>
+          <input type="password" id="login-password" placeholder="Sua senha">
         </div>
-    </div>
-
-    <!-- Modal de Avaliações -->
-    <div id="reviews-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="reviews-title">Avaliações</h2>
-            <div id="reviews-list"></div>
-            <div id="add-review">
-                <h3>Adicionar Avaliação</h3>
-                <select id="review-rating">
-                    <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
-                    <option value="4">⭐️⭐️⭐️⭐️</option>
-                    <option value="3">⭐️⭐️⭐️</option>
-                    <option value="2">⭐️⭐️</option>
-                    <option value="1">⭐️</option>
-                </select>
-                <textarea id="review-comment" placeholder="Deixe seu comentário"></textarea>
-                <button onclick="enviarAvaliacao()">Enviar Avaliação</button>
-            </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" id="switch-to-register">Criar conta</button>
+          <button class="btn btn-primary" id="do-login">Entrar</button>
         </div>
+      </div>
+      
+      <div id="register-form" style="display: none;">
+        <div class="form-group">
+          <label for="register-name">Nome</label>
+          <input type="text" id="register-name" placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label for="register-password">Senha</label>
+          <input type="password" id="register-password" placeholder="Crie uma senha">
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" id="switch-to-login">Já tenho conta</button>
+          <button class="btn btn-primary" id="do-register">Registrar</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script src="main.js"></script>
+  <!-- Modal de Produto -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="product-modal-title">Detalhes do Produto</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="product-details">
+        <img id="product-modal-image" src="" alt="" class="product-image">
+        <h3 id="product-modal-name"></h3>
+        <p id="product-modal-category"></p>
+        <p class="product-price" id="product-modal-price"></p>
+        <p id="product-modal-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <button class="btn btn-primary" id="add-to-cart-from-modal">Adicionar ao Carrinho</button>
+      </div>
+    </div>
+  </div>
+
+ <!-- Modal de Checkout - Versão atualizada -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Finalizar Pedido</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <form id="checkout-form">
+        <div class="form-group">
+          <label for="checkout-name">Nome Completo*</label>
+          <input type="text" id="checkout-name" required>
+          <div class="validation-message" id="name-validation">Por favor, informe seu nome completo</div>
+        </div>
+        
+        <div class="form-group phone-mask">
+          <label for="checkout-phone">WhatsApp*</label>
+          <input type="tel" id="checkout-phone" required maxlength="15">
+          <div class="validation-message" id="phone-validation">Informe um WhatsApp válido com DDD</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="checkout-email">Email</label>
+          <input type="email" id="checkout-email">
+        </div>
+        
+        <div class="form-group">
+          <label for="checkout-address">Endereço Completo*</label>
+          <input type="text" id="checkout-address" required>
+          <div class="validation-message" id="address-validation">Por favor, informe seu endereço completo</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="checkout-notes">Observações</label>
+          <textarea id="checkout-notes" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+        </div>
+        
+        <a id="whatsapp-btn" class="whatsapp-btn" target="_blank" onclick="validarFormulario(event)">
+          <i class="fab fa-whatsapp"></i> Enviar Pedido por WhatsApp
+        </a>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal de Favoritos -->
+  <div id="favorites-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Meus Favoritos</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div id="favorites-list" style="max-height: 400px; overflow-y: auto;">
+        <p style="text-align: center; padding: 20px;">Nenhum produto favoritado ainda.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 LordCerbus S.I • Todos os direitos reservados</p>
+    <p>Entre em contato: (32)999182852</p>
+  </footer>
+  <script src="main.js"></script>
 </body>
 </html>
